@@ -1,4 +1,3 @@
-
 extends Node
 class_name AudioManager
 
@@ -9,6 +8,9 @@ var engine_sound: AudioStream
 var brake_sound: AudioStream
 var nitro_sound: AudioStream
 var crash_sound: AudioStream
+
+var target_pitch: float = 0.8
+var target_volume: float = -18.0
 
 
 func setup_audio(
@@ -33,6 +35,7 @@ func setup_audio(
         add_child(effects_player)
 
     engine_player.stream = engine_sound
+    engine_player.volume_db = target_volume
 
 
 func update_engine_sound(speed_ratio: float) -> void:
@@ -42,16 +45,25 @@ func update_engine_sound(speed_ratio: float) -> void:
     if engine_player.stream == null:
         return
 
+    var power: float = clampf(speed_ratio, 0.0, 1.0)
+
+    target_pitch = lerpf(0.8, 1.8, power)
+    target_volume = lerpf(-18.0, -3.0, power)
+
     if not engine_player.playing:
         engine_player.play()
 
     engine_player.pitch_scale = lerpf(
-        0.8,
-        1.8,
-        clampf(speed_ratio, 0.0, 1.0)
+        engine_player.pitch_scale,
+        target_pitch,
+        0.15
     )
 
-    engine_player.volume_db = -8.0
+    engine_player.volume_db = lerpf(
+        engine_player.volume_db,
+        target_volume,
+        0.15
+    )
 
 
 func play_brake() -> void:
