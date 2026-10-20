@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#fff4b0"/>
+      <stop offset="45%" stop-color="#d6a52d"/>
+      <stop offset="70%" stop-color="#80520b"/>
+      <stop offset="100%" stop-color="#ffe58a"/>
+    </linearGradient>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#252525"/>
+      <stop offset="100%" stop-color="#030303"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="512" height="512" rx="64" fill="#050505"/>
+
+  <path d="M256 30 L425 92 L405 280 Q376 384 256 461 Q136 384 107 280 L87 92 Z"
+        fill="url(#bg)" stroke="url(#gold)" stroke-width="8"/>
+
+  <path d="M256 48 L406 104 L388 273 Q360 364 256 433 Q152 364 124 273 L106 104 Z"
+        fill="none" stroke="#8e681b" stroke-width="2"/>
+
+  <g stroke="url(#gold)" stroke-width="4" stroke-linejoin="round">
+    <path d="M100 250 L132 217 L183 201 L220 157 L302 157 L344 192 L389 213 L414 245 L397 266 L113 266 Z"
+          fill="url(#gold)"/>
+    <path d="M195 199 L223 169 L296 169 L326 199 Z"
+          fill="#10151b"/>
+    <path d="M257 170 L257 199 M298 170 L318 199"
+          fill="none" stroke="#b88b29" stroke-width="3"/>
+    <path d="M112 232 L163 220 L146 240 L109 245 Z"
+          fill="#fff6bd" stroke="#fff6bd"/>
+    <path d="M356 220 L402 237 L405 246 L369 241 Z"
+          fill="#fff6bd" stroke="#fff6bd"/>
+    <path d="M165 266 L183 281 L213 281 L226 266 Z" fill="#080808"/>
+    <path d="M301 266 L315 281 L346 281 L361 266 Z" fill="#080808"/>
+  </g>
+
+  <path d="M145 299 L367 299" stroke="url(#gold)" stroke-width="3"/>
+  <text x="256" y="345" text-anchor="middle"
+        font-family="Arial,sans-serif" font-size="39"
+        font-weight="900" letter-spacing="2" fill="url(#gold)">SHADOW</text>
+  <text x="256" y="390" text-anchor="middle"
+        font-family="Arial,sans-serif" font-size="43"
+        font-weight="900" letter-spacing="8" fill="url(#gold)">GT</text>
+  <path d="M190 408 L322 408" stroke="url(#gold)" stroke-width="3"/>
+</svg>
