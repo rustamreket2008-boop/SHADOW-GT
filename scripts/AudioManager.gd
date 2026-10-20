@@ -13,6 +13,17 @@ var target_pitch: float = 0.8
 var target_volume: float = -18.0
 
 
+func _ready() -> void:
+    engine_player = AudioStreamPlayer.new()
+    engine_player.name = "EngineAudio"
+    engine_player.volume_db = -18.0
+    add_child(engine_player)
+
+    effects_player = AudioStreamPlayer.new()
+    effects_player.name = "EffectsAudio"
+    add_child(effects_player)
+
+
 func setup_audio(
     engine: AudioStream,
     brake: AudioStream,
@@ -24,28 +35,21 @@ func setup_audio(
     nitro_sound = nitro
     crash_sound = crash
 
-    if engine_player == null:
-        engine_player = AudioStreamPlayer.new()
-        engine_player.name = "EngineAudio"
-        add_child(engine_player)
-
-    if effects_player == null:
-        effects_player = AudioStreamPlayer.new()
-        effects_player.name = "EffectsAudio"
-        add_child(effects_player)
-
     engine_player.stream = engine_sound
-    engine_player.volume_db = target_volume
+    engine_player.volume_db = -18.0
+
+    if engine_sound != null:
+        engine_player.play()
 
 
-func update_engine_sound(speed_ratio: float) -> void:
+func update_engine_sound(throttle: float) -> void:
     if not is_instance_valid(engine_player):
         return
 
     if engine_player.stream == null:
         return
 
-    var power: float = clampf(speed_ratio, 0.0, 1.0)
+    var power: float = clampf(throttle, 0.0, 1.0)
 
     target_pitch = lerpf(0.8, 1.8, power)
     target_volume = lerpf(-18.0, -3.0, power)
@@ -88,9 +92,7 @@ func _play_effect(sound: AudioStream) -> void:
         return
 
     if not is_instance_valid(effects_player):
-        effects_player = AudioStreamPlayer.new()
-        effects_player.name = "EffectsAudio"
-        add_child(effects_player)
+        return
 
     effects_player.stream = sound
     effects_player.play()
