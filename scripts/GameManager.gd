@@ -1,6 +1,6 @@
 
 extends Node
-class_name GarageManager
+class_name GarageEconomyManager
 
 signal money_changed(amount: int)
 signal car_selected(car_id: String)
