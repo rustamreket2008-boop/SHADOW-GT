@@ -1,4 +1,4 @@
-name: SHADOW GT Check
+name: SHADOW GT Android APK
 
 on:
   push:
@@ -6,10 +6,11 @@ on:
   workflow_dispatch:
 
 jobs:
-  check:
+  build:
     runs-on: ubuntu-latest
     container:
       image: barichello/godot-ci:4.4.1
+
     steps:
       - name: Download project
         uses: actions/checkout@v4
@@ -19,12 +20,21 @@ jobs:
           test -f project.godot
           test -f scenes/Main.tscn
           test -f scenes/Car.tscn
+          test -f export_presets.cfg
 
-      - name: Import and check project
+      - name: Import project
         run: |
           godot --headless --editor --path . --quit
 
-      - name: Run game briefly
+      - name: Build Android APK
         run: |
-          godot --headless --path . --quit-after 5
+          mkdir -p build
+          godot --headless --path . --export-debug "Android" build/SHADOW-GT.apk
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: SHADOW-GT-APK
+          path: build/SHADOW-GT.apk
+          if-no-files-found: error
           
