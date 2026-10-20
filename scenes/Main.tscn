@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/Car.tscn" id="1_car"]
 [ext_resource type="Script" path="res://scripts/CameraFollow.gd" id="2_camera"]
@@ -13,6 +13,9 @@ ambient_light_energy = 0.8
 [sub_resource type="BoxMesh" id="RoadMesh"]
 size = Vector3(12, 0.2, 200)
 
+[sub_resource type="BoxShape3D" id="RoadCollision"]
+size = Vector3(12, 0.2, 200)
+
 [node name="Main" type="Node3D"]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
@@ -23,9 +26,14 @@ rotation_degrees = Vector3(-45, -30, 0)
 shadow_enabled = true
 light_energy = 1.3
 
-[node name="Road" type="MeshInstance3D" parent="."]
+[node name="RoadBody" type="StaticBody3D" parent="."]
 position = Vector3(0, -0.1, -50)
+
+[node name="Road" type="MeshInstance3D" parent="RoadBody"]
 mesh = SubResource("RoadMesh")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RoadBody"]
+shape = SubResource("RoadCollision")
 
 [node name="Car" parent="." instance=ExtResource("1_car")]
 position = Vector3(0, 0, 0)
