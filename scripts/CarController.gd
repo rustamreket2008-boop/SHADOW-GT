@@ -19,11 +19,13 @@ var current_speed: float = 0.0
 
 
 func _physics_process(delta: float) -> void:
-    var throttle := Input.get_action_strength("accelerate")
-    var reverse := Input.get_action_strength("reverse")
-    var steering := Input.get_axis(
-        "steer_right",
-        "steer_left"
+    var throttle: float = Input.get_action_strength("accelerate")
+    var reverse: float = Input.get_action_strength("reverse")
+
+    # Steering: A = left, D = right
+    var steering: float = Input.get_axis(
+        "steer_left",
+        "steer_right"
     )
 
     # Acceleration and reverse
@@ -38,7 +40,7 @@ func _physics_process(delta: float) -> void:
             drag * delta
         )
 
-    # Braking
+    # Brake
     if Input.is_action_pressed("brake"):
         current_speed = move_toward(
             current_speed,
@@ -46,6 +48,7 @@ func _physics_process(delta: float) -> void:
             brake_power * delta
         )
 
+    # Speed limits
     current_speed = clampf(
         current_speed,
         -reverse_speed,
@@ -54,28 +57,26 @@ func _physics_process(delta: float) -> void:
 
     # Steering
     if absf(current_speed) > 0.1:
-        var speed_factor := clampf(
+        var speed_factor: float = clampf(
             absf(current_speed) / max_speed,
             0.25,
             1.0
         )
 
-        var steering_direction := signf(current_speed)
-
         rotate_y(
             steering
             * steering_speed
             * speed_factor
-            * steering_direction
+            * signf(current_speed)
             * delta
         )
 
-    # Movement
-    var forward := -global_transform.basis.z
-
+    # Forward movement
+    var forward: Vector3 = -global_transform.basis.z
     velocity.x = forward.x * current_speed
     velocity.z = forward.z * current_speed
 
+    # Gravity
     if not is_on_floor():
         velocity.y -= gravity * delta
     else:
@@ -83,10 +84,10 @@ func _physics_process(delta: float) -> void:
 
     move_and_slide()
 
-    # Engine sound connection for later
+    # Engine sound
     if is_instance_valid(audio_manager):
-        var speed_ratio := absf(current_speed) / max_speed
-        var engine_power := maxf(
+        var speed_ratio: float = absf(current_speed) / max_speed
+        var engine_power: float = maxf(
             throttle,
             speed_ratio * 0.6
         )
