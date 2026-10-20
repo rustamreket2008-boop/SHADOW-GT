@@ -15,30 +15,59 @@ jobs:
       - name: Download project
         uses: actions/checkout@v4
 
-      - name: Install Android build dependencies
+      - name: Install Java and tools
         run: |
           apt-get update
           apt-get install -y openjdk-17-jdk unzip wget
+          java -version
+          keytool -help >/dev/null 2>&1
 
       - name: Configure Java
         run: |
-          echo "JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64" >> "$GITHUB_ENV"
-          echo "/usr/lib/jvm/java-17-openjdk-amd64/bin" >> "$GITHUB_PATH"
-          java -version
+          JAVA_PATH="$(dirname "$(dirname "$(readlink -f "$(which java)")")")"
+          echo "JAVA_HOME=$JAVA_PATH" >> "$GITHUB_ENV"
+          echo "$JAVA_PATH/bin" >> "$GITHUB_PATH"
 
-      - name: Install Godot Android export templates
+      - name: Find Android SDK
         run: |
-          mkdir -p "$HOME/.local/share/godot/export_templates/4.4.1.stable"
-          wget -q https://github.com/godotengine/godot/releases/download/4.4.1-stable/Godot_v4.4.1-stable_export_templates.tpz -O /tmp/templates.tpz
-          mkdir -p /tmp/godot-templates
-          unzip -q /tmp/templates.tpz -d /tmp/godot-templates
-          cp /tmp/godot-templates/templates/android_debug.apk "$HOME/.local/share/godot/export_templates/4.4.1.stable/"
-          cp /tmp/godot-templates/templates/android_release.apk "$HOME/.local/share/godot/export_templates/4.4.1.stable/"
+          SDKMANAGER="$(find / -type f -name sdkmanager -print -quit 2>/dev/null)"
+          if [ -z "$SDKMANAGER" ]; then
+            echo "ERROR: Android SDK sdkmanager not found in container"
+            exit 1
+          fi
 
-      - name: Configure debug keystore
+          SDK_PATH="$(dirname "$(dirname "$(dirname "$SDKMANAGER")")")"
+          echo "ANDROID_HOME=$SDK_PATH" >> "$GITHUB_ENV"
+          echo "ANDROID_SDK_ROOT=$SDK_PATH" >> "$GITHUB_ENV"
+          echo "SDKMANAGER=$SDKMANAGER" >> "$GITHUB_ENV"
+          echo "Android SDK: $SDK_PATH"
+
+      - name: Install Android SDK components
+        run: |
+          yes | "$SDKMANAGER" --sdk_root="$ANDROID_HOME" --licenses || true
+          "$SDKMANAGER" --sdk_root="$ANDROID_HOME" \
+            "platform-tools" \
+            "platforms;android-33" \
+            "build-tools;33.0.2"
+
+      - name: Install Godot Android templates
+        run: |
+          TEMPLATE_DIR="$HOME/.local/share/godot/export_templates/4.4.1.stable"
+          mkdir -p "$TEMPLATE_DIR"
+          wget -q \
+            https://github.com/godotengine/godot/releases/download/4.4.1-stable/Godot_v4.4.1-stable_export_templates.tpz \
+            -O /tmp/godot-templates.tpz
+          mkdir -p /tmp/godot-templates
+          unzip -q /tmp/godot-templates.tpz -d /tmp/godot-templates
+          test -f /tmp/godot-templates/templates/android_debug.apk
+          test -f /tmp/godot-templates/templates/android_release.apk
+          cp /tmp/godot-templates/templates/android_debug.apk "$TEMPLATE_DIR/"
+          cp /tmp/godot-templates/templates/android_release.apk "$TEMPLATE_DIR/"
+
+      - name: Create debug keystore
         run: |
           mkdir -p "$HOME/.config/godot"
-          keytool -genkeypair -v \
+          keytool -genkeypair \
             -keystore "$HOME/.config/godot/keystore" \
             -storepass android \
             -alias androiddebugkey \
@@ -47,7 +76,9 @@ jobs:
             -keysize 2048 \
             -validity 10000 \
             -dname "CN=Android Debug,O=Android,C=US"
-          mkdir -p "$HOME/.config"
+          echo "GODOT_ANDROID_KEYSTORE_DEBUG_PATH=$HOME/.config/godot/keystore" >> "$GITHUB_ENV"
+          echo "GODOT_ANDROID_KEYSTORE_DEBUG_USER=androiddebugkey" >> "$GITHUB_ENV"
+          echo "GODOT_ANDROID_KEYSTORE_DEBUG_PASSWORD=android" >> "$GITHUB_ENV"
 
       - name: Check project files
         run: |
@@ -64,6 +95,7 @@ jobs:
         run: |
           mkdir -p build
           godot --headless --path . --export-debug "Android" build/SHADOW-GT.apk
+          test -s build/SHADOW-GT.apk
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
