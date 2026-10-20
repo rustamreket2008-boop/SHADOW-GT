@@ -1,3 +1,4 @@
+
 extends CharacterBody3D
 class_name CarController
 
@@ -6,7 +7,6 @@ class_name CarController
 @export var max_speed: float = 35.0
 @export var steering_speed: float = 1.8
 @export var brake_power: float = 25.0
-
 @export var audio_manager: AudioManager
 
 var current_speed: float = 0.0
