@@ -16,13 +16,13 @@ func _process(delta: float) -> void:
     if not is_instance_valid(target):
         return
 
-    var offset := target.global_transform.basis * Vector3(
+    var offset: Vector3 = target.global_transform.basis * Vector3(
         0.0,
         follow_height,
         follow_distance
     )
 
-    var desired_position := target.global_position + offset
+    var desired_position: Vector3 = target.global_position + offset
 
     global_position = global_position.lerp(
         desired_position,
