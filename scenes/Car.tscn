@@ -1,5 +1,4 @@
-
-[gd_scene load_steps=8 format=3]
+[gd_scene load_steps=9 format=3]
 
 [ext_resource type="Script" path="res://scripts/CarController.gd" id="1_car"]
 
@@ -7,7 +6,7 @@
 size = Vector3(1.8, 1.0, 4.0)
 
 [sub_resource type="BoxMesh" id="CarBodyMesh"]
-size = Vector3(1.8, 0.65, 3.8]
+size = Vector3(1.8, 0.65, 3.8)
 
 [sub_resource type="StandardMaterial3D" id="CarPaint"]
 albedo_color = Color(0.75, 0.025, 0.035, 1)
@@ -15,7 +14,7 @@ metallic = 0.65
 roughness = 0.25
 
 [sub_resource type="BoxMesh" id="RoofMesh"]
-size = Vector3(1.35, 0.5, 1.8]
+size = Vector3(1.35, 0.5, 1.8)
 
 [sub_resource type="StandardMaterial3D" id="GlassMaterial"]
 albedo_color = Color(0.025, 0.045, 0.065, 1)
@@ -26,7 +25,7 @@ roughness = 0.15
 top_radius = 0.38
 bottom_radius = 0.38
 height = 0.24
-radial_segments = 20
+radial_segments = 24
 
 [sub_resource type="StandardMaterial3D" id="WheelMaterial"]
 albedo_color = Color(0.025, 0.025, 0.03, 1)
@@ -37,6 +36,7 @@ script = ExtResource("1_car")
 max_speed = 35.0
 acceleration = 18.0
 steering_speed = 1.8
+brake_power = 25.0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 position = Vector3(0, 0.5, 0)
@@ -97,3 +97,4 @@ volume_db = -12.0
 
 [node name="CameraAnchor" type="Marker3D" parent="."]
 position = Vector3(0, 3.5, 7.0)
+
