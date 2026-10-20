@@ -1,4 +1,4 @@
-; SHADOW GT - Realistic 3D Racing Game
+; SHADOW GT - 3D Racing Game
 config_version=5
 
 [application]
@@ -37,6 +37,21 @@ steer_right={
 brake={
 "deadzone": 0.5,
 "events": [Object(InputEventKey,"physical_keycode":32)]
+}
+
+nitro={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"physical_keycode":78)]
+}
+
+change_camera={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"physical_keycode":67)]
+}
+
+pause={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"physical_keycode":80), Object(InputEventKey,"physical_keycode":4194305)]
 }
 
 [rendering]
