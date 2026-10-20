@@ -15,6 +15,40 @@ jobs:
       - name: Download project
         uses: actions/checkout@v4
 
+      - name: Install Android build dependencies
+        run: |
+          apt-get update
+          apt-get install -y openjdk-17-jdk unzip wget
+
+      - name: Configure Java
+        run: |
+          echo "JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64" >> "$GITHUB_ENV"
+          echo "/usr/lib/jvm/java-17-openjdk-amd64/bin" >> "$GITHUB_PATH"
+          java -version
+
+      - name: Install Godot Android export templates
+        run: |
+          mkdir -p "$HOME/.local/share/godot/export_templates/4.4.1.stable"
+          wget -q https://github.com/godotengine/godot/releases/download/4.4.1-stable/Godot_v4.4.1-stable_export_templates.tpz -O /tmp/templates.tpz
+          mkdir -p /tmp/godot-templates
+          unzip -q /tmp/templates.tpz -d /tmp/godot-templates
+          cp /tmp/godot-templates/templates/android_debug.apk "$HOME/.local/share/godot/export_templates/4.4.1.stable/"
+          cp /tmp/godot-templates/templates/android_release.apk "$HOME/.local/share/godot/export_templates/4.4.1.stable/"
+
+      - name: Configure debug keystore
+        run: |
+          mkdir -p "$HOME/.config/godot"
+          keytool -genkeypair -v \
+            -keystore "$HOME/.config/godot/keystore" \
+            -storepass android \
+            -alias androiddebugkey \
+            -keypass android \
+            -keyalg RSA \
+            -keysize 2048 \
+            -validity 10000 \
+            -dname "CN=Android Debug,O=Android,C=US"
+          mkdir -p "$HOME/.config"
+
       - name: Check project files
         run: |
           test -f project.godot
