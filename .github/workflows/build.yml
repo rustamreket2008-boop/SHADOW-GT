@@ -1,0 +1,30 @@
+name: SHADOW GT Check
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    container:
+      image: barichello/godot-ci:4.4.1
+    steps:
+      - name: Download project
+        uses: actions/checkout@v4
+
+      - name: Check project files
+        run: |
+          test -f project.godot
+          test -f scenes/Main.tscn
+          test -f scenes/Car.tscn
+
+      - name: Import and check project
+        run: |
+          godot --headless --editor --path . --quit
+
+      - name: Run game briefly
+        run: |
+          godot --headless --path . --quit-after 5
+          
