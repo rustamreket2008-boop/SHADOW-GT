@@ -1,4 +1,4 @@
-еxtends Node
+extends Node
 class_name LeaderboardManager
 
 signal record_updated(track_id: String, best_time: float)
