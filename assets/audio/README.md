@@ -1,18 +1,11 @@
+# SHADOW GT Engine Audio
 
-# SHADOW GT Audio
+## Engine sounds
 
-All game sound assets will be organized here.
+- car_idle_loop.ogg
+- car_mid_loop.ogg
 
-Categories:
-- car
-- crashes
-- driving
-- engines
-- horns
-- others
-- sorens
-- transit
-- tyres
+These audio files are intended for engine idle
+and medium-speed engine playback.
 
-Supported formats: OGG and WAV.
-Platforms: Android and Windows PC.
+The actual OGG files must be uploaded to this folder.
