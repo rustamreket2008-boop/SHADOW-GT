@@ -34,8 +34,9 @@ jobs:
             "platform-tools" \
             "platforms;android-35" \
             "build-tools;35.0.0" \
+            "cmake;3.10.2.4988404" \
             "ndk;23.2.8568313"
-
+             
       - name: Set up Godot
         uses: chickensoft-games/setup-godot@v2
         with:
