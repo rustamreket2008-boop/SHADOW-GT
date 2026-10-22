@@ -32,6 +32,7 @@ jobs:
         run: |
           sdkmanager --install \
             "platform-tools" \
+            "cmdline-tools;latest" \
             "platforms;android-35" \
             "build-tools;35.0.0" \
             "cmake;3.10.2.4988404" \
