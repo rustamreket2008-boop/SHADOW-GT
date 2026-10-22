@@ -122,11 +122,10 @@ jobs:
         run: |
           godot --headless --editor --path . --quit
 
-      - name: Build Android APK
+           - name: Build Android APK
         run: |
           mkdir -p build
-          godot --headless --path . \
-            --export-debug "Android" build/SHADOW-GT.apk
+          godot --headless --path . --verbose --export-debug "Android" build/SHADOW-GT.apk
           test -s build/SHADOW-GT.apk
 
       - name: Upload APK
