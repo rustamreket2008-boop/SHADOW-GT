@@ -120,7 +120,18 @@ jobs:
       - name: Import project
         run: |
           godot --headless --editor --path . --quit
-
+      
+      - name: Diagnose Android export
+        run: |
+          echo "=== Export preset ==="
+          cat export_presets.cfg
+          echo "=== Android SDK ==="
+          ls -la "$ANDROID_HOME"
+          echo "=== Godot export templates ==="
+          ls -la "$HOME/.local/share/godot/export_templates/4.4.1.stable/"
+          echo "=== Check export ==="
+          godot --headless --editor --path . --quit --verbose
+    
       - name: Build Android APK
         run: |
           mkdir -p build
