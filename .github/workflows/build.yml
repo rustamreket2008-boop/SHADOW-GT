@@ -23,12 +23,11 @@ jobs:
           distribution: temurin
           java-version: "17"
 
-      
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
         with:
           packages: platform-tools
-          
+
       - name: Install Android SDK components
         run: |
           sdkmanager --install \
@@ -85,6 +84,7 @@ jobs:
           python3 - <<'PY'
           from pathlib import Path
           import os
+          import re
 
           path = Path("export_presets.cfg")
           text = path.read_text()
@@ -96,7 +96,6 @@ jobs:
           }
 
           for key, value in values.items():
-              import re
               pattern = rf'^{re.escape(key)}=.*$'
               replacement = f'{key}="{value}"'
               if re.search(pattern, text, flags=re.MULTILINE):
@@ -122,7 +121,7 @@ jobs:
         run: |
           godot --headless --editor --path . --quit
 
-           - name: Build Android APK
+      - name: Build Android APK
         run: |
           mkdir -p build
           godot --headless --path . --verbose --export-debug "Android" build/SHADOW-GT.apk
@@ -134,4 +133,3 @@ jobs:
           name: SHADOW-GT-Android-APK
           path: build/SHADOW-GT.apk
           if-no-files-found: error
-          
